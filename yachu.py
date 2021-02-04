@@ -5,6 +5,7 @@ import sys
 from PyQt5.QtGui import *
 import random
 from yachupkg.MyLabel import *
+from yachupkg.server import server
 
 yachu = '.\\Yachu.ui'
 
@@ -63,8 +64,17 @@ class MyWindow(QMainWindow):
 
     def createServer(self):
         csDialog = InputDialog()
-        if csDialog.exec():
-            print(csDialog.getInputs())
+        csDialog.exec()
+        print(csDialog.getInputs("ip"))
+
+        s = server(csDialog.getInputs("ip"), csDialog.getInputs("port"))
+
+        #server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        #server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        #server_socket.bind((csDialog.getInputs("ip"), csDialog.getInputs("port")))
+        #server_socket.listen()
+
+        #client_socket, client_ip = server_socket.accept()
 
     def joinServer(self):
         jsDialog = InputDialog()
