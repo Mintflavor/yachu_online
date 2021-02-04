@@ -13,6 +13,7 @@ class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi(yachu, self)
+
         self.pushButton.clicked.connect(self.rolldice)
         self.tableWidget.cellClicked.connect(self.inputrank)
 
@@ -21,12 +22,15 @@ class MyWindow(QMainWindow):
 
         self.dice = [self.label1, self.label2, self.label3, self.label4, self.label5]
         self.ran_num = [0, 0, 0, 0, 0]
+
         for i in self.dice:
             i.clicked.connect(self.keep)
+
         self.qp = QPixmap()
         for i in range(0, 5):
                 self.qp.load(f'./img/dice{i+1}.png')
                 self.dice[i].setPixmap(self.qp)
+
         self.show()
 
     def rolldice(self):

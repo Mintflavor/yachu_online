@@ -19,7 +19,7 @@ class InputDialog(QDialog):
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self);
 
         layout = QFormLayout(self)
-        layout.addRow("Your IP", self.first)
+        layout.addRow("IP", self.first)
         layout.addRow("PORT", self.second)
         layout.addWidget(buttonBox)
 
