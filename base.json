@@ -1,0 +1,45 @@
+[
+  {
+    "dice1": "1",
+    "dice2": "1",
+    "dice3": "1",
+    "dice4": "1",
+    "dice5": "1"
+  },
+  {
+    "one": "",
+    "two": "",
+    "three": "",
+    "four": "",
+    "five": "",
+    "six": "",
+    "num_total": "",
+    "bonus": "",
+    "3ofkind": "",
+    "4ofkind": "",
+    "fullhouse": "",
+    "sstraight": "",
+    "lstraight": "",
+    "chance": "",
+    "yachu": "",
+    "total": ""
+  },
+  {
+    "one": "",
+    "two": "",
+    "three": "",
+    "four": "",
+    "five": "",
+    "six": "",
+    "num_total": "",
+    "bonus": "",
+    "3ofkind": "",
+    "4ofkind": "",
+    "fullhouse": "",
+    "sstraight": "",
+    "lstraight": "",
+    "chance": "",
+    "yachu": "",
+    "total": ""
+  }
+]
