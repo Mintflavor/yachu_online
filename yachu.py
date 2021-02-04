@@ -15,8 +15,10 @@ class MyWindow(QMainWindow):
         uic.loadUi(yachu, self)
         self.pushButton.clicked.connect(self.rolldice)
         self.tableWidget.cellClicked.connect(self.inputrank)
+
         self.actionCreate_Game.triggered.connect(self.createServer)
-        self.actionJoin_Game.triggered.connect(self.createServer)
+        self.actionJoin_Game.triggered.connect(self.joinServer)
+
         self.dice = [self.label1, self.label2, self.label3, self.label4, self.label5]
         self.ran_num = [0, 0, 0, 0, 0]
         for i in self.dice:
