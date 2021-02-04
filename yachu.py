@@ -4,6 +4,7 @@ from PyQt5 import uic
 import sys
 from PyQt5.QtGui import *
 import random
+from yachupkg.MyLabel import *
 
 yachu = '.\\Yachu.ui'
 
@@ -14,10 +15,8 @@ class MyWindow(QMainWindow):
         uic.loadUi(yachu, self)
         self.pushButton.clicked.connect(self.rolldice)
         self.tableWidget.cellClicked.connect(self.inputrank)
-
-        self.actionCreate_Server.triggered.connect(self.create_server)
-        self.actionJoin_Game.triggered.connect(self.join_game)
-
+        self.actionCreate_Game.triggered.connect(self.createServer)
+        self.actionJoin_Game.triggered.connect(self.createServer)
         self.dice = [self.label1, self.label2, self.label3, self.label4, self.label5]
         self.ran_num = [0, 0, 0, 0, 0]
         for i in self.dice:
@@ -56,11 +55,15 @@ class MyWindow(QMainWindow):
                 continue
             self.tableWidget.setItem(i, 1, QTableWidgetItem(str(total)))
 
-    def create_server(self):
-    	print("asd")
+    def createServer(self):
+        csDialog = InputDialog()
+        if csDialog.exec():
+            print(csDialog.getInputs())
 
-    def join_game(self):
-    	print("qwe")
+    def joinServer(self):
+        jsDialog = InputDialog()
+        if jsDialog.exec():
+            print(jsDialog.getInputs())
 
 def main():
     app = QApplication(sys.argv)

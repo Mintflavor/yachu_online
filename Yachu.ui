@@ -232,7 +232,7 @@
        </item>
        <item row="11" column="0">
         <property name="text">
-         <string>S.Straight</string>
+         <string>S.Strate</string>
         </property>
         <property name="flags">
          <set>ItemIsSelectable</set>
@@ -240,7 +240,7 @@
        </item>
        <item row="12" column="0">
         <property name="text">
-         <string>L.Straight</string>
+         <string>L.Strate</string>
         </property>
         <property name="flags">
          <set>ItemIsSelectable</set>
@@ -476,7 +476,7 @@
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuasdadad">
+   <widget class="QMenu" name="menu">
     <property name="title">
      <string>Single Play</string>
     </property>
@@ -488,15 +488,15 @@
     <property name="title">
      <string>Multi Play</string>
     </property>
-    <addaction name="actionCreate_Server"/>
+    <addaction name="actionCreate_Game"/>
     <addaction name="separator"/>
     <addaction name="actionJoin_Game"/>
    </widget>
-   <addaction name="menuasdadad"/>
+   <addaction name="menu"/>
    <addaction name="menuasdasdasd"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionCreate_Server">
+  <action name="actionCreate_Game">
    <property name="text">
     <string>Create Game</string>
    </property>
