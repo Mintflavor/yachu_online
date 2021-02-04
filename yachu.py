@@ -25,7 +25,7 @@ class MyWindow(QMainWindow):
             i.clicked.connect(self.keep)
         self.qp = QPixmap()
         for i in range(0, 5):
-                self.qp.load(f'dice{i+1}.png')
+                self.qp.load(f'./img/dice{i+1}.png')
                 self.dice[i].setPixmap(self.qp)
         self.show()
 
@@ -34,7 +34,7 @@ class MyWindow(QMainWindow):
         for i in range(0, 5):
             if self.dice[i].frameShape() == QFrame.NoFrame:
                 self.ran_num[i] = random.randrange(1, 7)
-                self.qp.load(f'dice{self.ran_num[i]}.png')
+                self.qp.load(f'./img/dice{self.ran_num[i]}.png')
                 self.dice[i].setPixmap(self.qp)
         self.handrank()
 
