@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+import socket
 
 
 class ClickLabel(QLabel):
@@ -14,17 +15,24 @@ class InputDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.first = QLineEdit(self)
-        self.second = QLineEdit(self)
+        self.ip = QLineEdit(self)
+        self.port = QLineEdit(self)
+
+        self.ip.setText(socket.gethostbyname(socket.getfqdn()))
+        self.port.setText("5050")
+
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel, self);
 
         layout = QFormLayout(self)
-        layout.addRow("IP", self.first)
-        layout.addRow("PORT", self.second)
+        layout.addRow("IP", self.ip)
+        layout.addRow("PORT", self.port)
         layout.addWidget(buttonBox)
 
         buttonBox.accepted.connect(self.accept)
         buttonBox.rejected.connect(self.reject)
 
-    def getInputs(self):
-        return (self.first.text(), self.second.text())
+    def getInputs(self, what):
+        if what == "ip":
+            return self.ip.text()
+        else:
+            return self.port.text()
