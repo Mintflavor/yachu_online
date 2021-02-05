@@ -5,6 +5,7 @@ import sys
 from PyQt5.QtGui import *
 import random
 from yachupkg.MyLabel import *
+from yachupkg.Player import *
 #from yachupkg.server import server
 
 yachu = '.\\Yachu.ui'
@@ -19,7 +20,7 @@ class MyWindow(QMainWindow):
         self.tableWidget.cellClicked.connect(self.inputrank)         # 점수표 클릭 연결
 
         self.actionCreate_Game.triggered.connect(self.createServer)  # 상단메뉴바의 멀티게임생성 트리거
-        self.actionJoin_Game.triggered.connect(self.createServer)    # 상단메뉴바의 멀티게임참가 트리거
+        self.actionJoin_Game.triggered.connect(self.joinServer)    # 상단메뉴바의 멀티게임참가 트리거
 
         self.dice = [self.label1, self.label2, self.label3, self.label4, self.label5]  # 게임주사위들을 저장한 배열
         self.ran_num = [0, 0, 0, 0, 0]
@@ -30,6 +31,8 @@ class MyWindow(QMainWindow):
         for i in range(0, 5):
                 self.qp.load(f'./img/dice{i+1}.png')
                 self.dice[i].setPixmap(self.qp)
+
+        self.PlayerStatus = Player()        # 플레이어 정보
 
         self.loadingUI()
         self.show()
@@ -45,10 +48,11 @@ class MyWindow(QMainWindow):
     def rolldice(self):
         self.qp = QPixmap()
         for i in range(0, 5):
-            if self.dice[i].frameShape() == QFrame.NoFrame:
+            if self.dice[i].frameShape() == 0:
                 self.ran_num[i] = random.randrange(1, 7)
                 self.qp.load(f'./img/dice{self.ran_num[i]}.png')
                 self.dice[i].setPixmap(self.qp)
+
         self.handrank()
 
     def keep(self):
@@ -62,13 +66,14 @@ class MyWindow(QMainWindow):
         self.tableWidget.setItem(self.tableWidget.currentRow(), self.tableWidget.currentColumn(), QTableWidgetItem('A'))
 
     def handrank(self):
-        total = 0
-        for i in self.ran_num:
-            total = total + i
+        self.PlayerStatus.checkHandrank(self.ran_num)
+        print(self.ran_num)
+        index = 0
         for i in range(0, 15):
             if i in [6, 7]:
                 continue
-            self.tableWidget.setItem(i, 1, QTableWidgetItem(str(total)))
+            self.tableWidget.setItem(i, 1, QTableWidgetItem(str(self.PlayerStatus.handrank[index])))
+            index = index + 1
 
     def createServer(self):
         csDialog = InputDialog()
