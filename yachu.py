@@ -27,7 +27,7 @@ class MyWindow(QMainWindow):
     def gamestart(self):
         self.tableWidget.cellClicked.connect(self.turnEnd)  # 점수표 클릭 연결
         self.dice = [self.label1, self.label2, self.label3, self.label4, self.label5]  # 게임주사위들을 저장한 배열
-        self.turncheck = 2                                    # Turn 의 Roll Dice 횟수를 위한 변수
+        self.turncheck = 3                                   # Turn 의 Roll Dice 횟수를 위한 변수
         self.tempclick =[]                                    # 선택불가능한 셀 판별을 위한 리스트
         self.ran_num = [0, 0, 0, 0, 0]
         for i in self.dice:
@@ -55,26 +55,36 @@ class MyWindow(QMainWindow):
                 self.ran_num[i] = random.randrange(1, 7)
                 self.qp.load(f'./img/dice{self.ran_num[i]}.png')
                 self.dice[i].setPixmap(self.qp)
-        self.printhandrank()
-        self.pushButton.setText("Roll Dice! ("+str(self.turncheck)+")")
         if self.checkTurn():
             self.pushButton.setText("Input Score!")
             self.pushButton.setDisabled(True)
+        else:
+            self.pushButton.setText("Roll Dice! (" + str(self.turncheck) + ")")
+        self.printhandrank()
 
     def turnEnd(self):
         if self.inputrank():
+            self.checkgameend()
             for i in self.dice:
                 i.setFrameShape(QFrame.NoFrame)
             self.pushButton.setEnabled(True)
             self.pushButton.setText("Roll Dice!")
-            self.turncheck = 2
+            self.turncheck = 3
 
     def checkTurn(self):
-        if self.turncheck is 0:
+        if self.turncheck-1 is 0:
             return True
         else:
             self.turncheck -= 1
             return False
+
+    def checkgameend(self):
+        if all([self.tableWidget.item(i, 1).background() == QColor(232,245,171,96) for i in range(0, 6)]):
+            if sum(self.PlayerStatus.myscore[0:6]) > 63:
+                self.PlayerStatus.myscore.append(35)
+            if all([self.tableWidget.item(i, 1).background() == QColor(232,245,171,96) for i in range(8, 15)]):
+                self.tableWidget.setItem(15, 1, QTableWidgetItem(str(sum(self.PlayerStatus.myscore))))
+
 
     def keep(self):
         sender = self.sender()
@@ -86,19 +96,22 @@ class MyWindow(QMainWindow):
     def inputrank(self):
         try:
             row, column = self.tableWidget.currentRow(), self.tableWidget.currentColumn()
-            if self.tempclick == [row, column]:
+            if self.tempclick == [row, column] or self.turncheck == 3 \
+                    or self.tableWidget.item(row, column).background() == QColor(232,245,171,96):
                 raise NoClickError
             self.tempclick = [row, column]
-            if row < 6:
-                # self.tableWidget.setItem(row, column, QTableWidgetItem(str(self.PlayerStatus.handrank[row])))
-                self.PlayerStatus.myscore[row] = self.PlayerStatus.handrank[row]
-            else:
-                # self.tableWidget.setItem(row, column, QTableWidgetItem(str(self.PlayerStatus.handrank[row-2])))
-                self.PlayerStatus.myscore[row-2] = self.PlayerStatus.handrank[row-2]
+            index = row
+            if row > 6:
+                index = row-2
+            self.PlayerStatus.myscore[index] = self.PlayerStatus.handrank[index]
+            if self.PlayerStatus.myscore[index] == -1:
+                self.PlayerStatus.myscore[index] = 0
+                self.tableWidget.setItem(row, column, QTableWidgetItem("0"))
             self.tableWidget.item(row, column).setBackground(QColor(232,245,171,96))
             self.tableWidget.item(row, column).selectable = False
             return True
-        except:
+        except Exception as e:
+            print(e)
             return False
 
     def printhandrank(self):

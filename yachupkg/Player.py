@@ -38,12 +38,6 @@ class Player:
 
         self.handrank[11] = sum(ran_num)
 
-    def gameend(self):
-        if sum(self.myscore[0:6]) > 63:
-            self.myscore.append(35)
-
-        return sum(self.myscore)
-
 
 
 
