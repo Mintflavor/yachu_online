@@ -30,3 +30,7 @@ class InputDialog(QDialog):
     def getInputs(self):
         return (self.first.text(), self.second.text())
 
+
+class NoClickError(Exception):
+    def __init__(self):
+        super().__init__('응 클릭안대~')

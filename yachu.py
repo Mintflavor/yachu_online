@@ -6,7 +6,7 @@ from PyQt5.QtGui import *
 import random
 from yachupkg.MyLabel import *
 from yachupkg.Player import *
-#from yachupkg.server import server
+# from yachupkg.server import server
 
 yachu = '.\\Yachu.ui'
 
@@ -17,12 +17,18 @@ class MyWindow(QMainWindow):
         uic.loadUi(yachu, self)
 
         self.pushButton.clicked.connect(self.rolldice)               # 주사위굴리기 버튼
-        self.tableWidget.cellClicked.connect(self.inputrank)         # 점수표 클릭 연결
 
         self.actionCreate_Game.triggered.connect(self.createServer)  # 상단메뉴바의 멀티게임생성 트리거
         self.actionJoin_Game.triggered.connect(self.joinServer)    # 상단메뉴바의 멀티게임참가 트리거
 
+        self.gamestart()
+        self.show()
+
+    def gamestart(self):
+        self.tableWidget.cellClicked.connect(self.turnEnd)  # 점수표 클릭 연결
         self.dice = [self.label1, self.label2, self.label3, self.label4, self.label5]  # 게임주사위들을 저장한 배열
+        self.turncheck = 2                                    # Turn 의 Roll Dice 횟수를 위한 변수
+        self.tempclick =[]                                    # 선택불가능한 셀 판별을 위한 리스트
         self.ran_num = [0, 0, 0, 0, 0]
         for i in self.dice:
             i.clicked.connect(self.keep)
@@ -32,16 +38,13 @@ class MyWindow(QMainWindow):
                 self.qp.load(f'./img/dice{i+1}.png')
                 self.dice[i].setPixmap(self.qp)
 
-        self.PlayerStatus = Player()        # 플레이어 정보
-
+        self.PlayerStatus = Player()        # 플레이어 객체 생성
         self.loadingUI()
-        self.show()
 
     def loadingUI(self):
         self.cancelbtn.clicked.connect(self.stopServer)              # 서버로딩창의 취소버튼
         self.loadgif = QMovie(f'./img/loading.gif')
         self.label_loading.setMovie(self.loadgif)
-        self.loadgif.start()
         self.frame.setStyleSheet("background-color:white;")
         self.frame.hide()
 
@@ -52,8 +55,26 @@ class MyWindow(QMainWindow):
                 self.ran_num[i] = random.randrange(1, 7)
                 self.qp.load(f'./img/dice{self.ran_num[i]}.png')
                 self.dice[i].setPixmap(self.qp)
+        self.printhandrank()
+        self.pushButton.setText("Roll Dice! ("+str(self.turncheck)+")")
+        if self.checkTurn():
+            self.pushButton.setText("Input Score!")
+            self.pushButton.setDisabled(True)
 
-        self.handrank()
+    def turnEnd(self):
+        if self.inputrank():
+            for i in self.dice:
+                i.setFrameShape(QFrame.NoFrame)
+            self.pushButton.setEnabled(True)
+            self.pushButton.setText("Roll Dice!")
+            self.turncheck = 2
+
+    def checkTurn(self):
+        if self.turncheck is 0:
+            return True
+        else:
+            self.turncheck -= 1
+            return False
 
     def keep(self):
         sender = self.sender()
@@ -63,30 +84,55 @@ class MyWindow(QMainWindow):
             sender.setFrameShape(QFrame.Box)
 
     def inputrank(self):
-        self.tableWidget.setItem(self.tableWidget.currentRow(), self.tableWidget.currentColumn(), QTableWidgetItem('A'))
+        try:
+            row, column = self.tableWidget.currentRow(), self.tableWidget.currentColumn()
+            if self.tempclick == [row, column]:
+                raise NoClickError
+            self.tempclick = [row, column]
+            if row < 6:
+                # self.tableWidget.setItem(row, column, QTableWidgetItem(str(self.PlayerStatus.handrank[row])))
+                self.PlayerStatus.myscore[row] = self.PlayerStatus.handrank[row]
+            else:
+                # self.tableWidget.setItem(row, column, QTableWidgetItem(str(self.PlayerStatus.handrank[row-2])))
+                self.PlayerStatus.myscore[row-2] = self.PlayerStatus.handrank[row-2]
+            self.tableWidget.item(row, column).setBackground(QColor(232,245,171,96))
+            self.tableWidget.item(row, column).selectable = False
+            return True
+        except:
+            return False
 
-    def handrank(self):
+    def printhandrank(self):
         self.PlayerStatus.checkHandrank(self.ran_num)
-        print(self.ran_num)
         index = 0
         for i in range(0, 15):
             if i in [6, 7]:
                 continue
-            self.tableWidget.setItem(i, 1, QTableWidgetItem(str(self.PlayerStatus.handrank[index])))
-            index = index + 1
+            currentscore = self.PlayerStatus.handrank[index]
+            if self.PlayerStatus.myscore[index] is -1:
+                if currentscore is not -1 and currentscore is not 0:
+                    self.tableWidget.setItem(i, 1, QTableWidgetItem(str(currentscore)))
+                else:
+                    self.tableWidget.setItem(i, 1, QTableWidgetItem(""))
+            index += 1
+
+    def gameend(self):
+        self.tableWidget.setItem(15, 1, QTableWidgetItem(str(self.PlayerStatus.gameend())))
 
     def createServer(self):
         csDialog = InputDialog()
         if csDialog.exec():
             if csDialog.check is True:
+                self.loadgif.start()
                 self.frame.show()
 
     def joinServer(self):
         jsDialog = InputDialog()
         if jsDialog.exec():
-            print(jsDialog.getInputs())
+            self.loadgif.start()
+            self.frame.show()
 
     def stopServer(self):
+        self.loadgif.stop()
         self.frame.hide()
 
 
