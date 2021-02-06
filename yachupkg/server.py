@@ -1,8 +1,8 @@
 import asyncio
 from random import random
 
-async def run_server():
-	server = await asyncio.start_server(handler, host="127.0.0.1", port=5050)
+async def run_server(port: int):
+	server = await asyncio.start_server(handler, host="0.0.0.0", port=port)
 	async with server:
 		await server.serve_forever()
 
@@ -18,9 +18,11 @@ async def handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter):
 		writer.write(res.encode())
 		await writer.drain()
 
-async def test():
-	await asyncio.wait(run_server())
+async def test(port: int):
+	await asyncio.wait([run_server(port)])
 
-if __name__ == "__main__":
-	loop = asyncio.get_event_loop()
-	loop.run_until_complete(test())
+#if __name__ == "__main__":
+	#loop = asyncio.get_event_loop()
+	#loop.run_until_complete(test())
+	#loop.close()
+	#asyncio.run(test())

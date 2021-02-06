@@ -5,7 +5,8 @@ import sys
 from PyQt5.QtGui import *
 import random
 from yachupkg.MyLabel import *
-from yachupkg.server import server
+from yachupkg.server import *
+import asyncio
 
 yachu = '.\\Yachu.ui'
 
@@ -67,7 +68,7 @@ class MyWindow(QMainWindow):
         csDialog.exec()
         print(csDialog.getInputs("ip"))
 
-        s = server(csDialog.getInputs("ip"), csDialog.getInputs("port"))
+        asyncio.run(test(csDialog.getInputs("port")))
 
     def joinServer(self):
         jsDialog = InputDialog()
