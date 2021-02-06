@@ -69,13 +69,6 @@ class MyWindow(QMainWindow):
 
         s = server(csDialog.getInputs("ip"), csDialog.getInputs("port"))
 
-        #server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        #server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        #server_socket.bind((csDialog.getInputs("ip"), csDialog.getInputs("port")))
-        #server_socket.listen()
-
-        #client_socket, client_ip = server_socket.accept()
-
     def joinServer(self):
         jsDialog = InputDialog()
         if jsDialog.exec():
