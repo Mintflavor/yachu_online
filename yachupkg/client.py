@@ -24,3 +24,6 @@ async def run_client(host : str, port : int):
 	print("[C] closing connection...")
 	writer.close()
 	await writer.wait_closed()
+
+if __name__ == "__main__":
+	run_client("127.0.0.1", 5050)
